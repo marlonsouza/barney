@@ -1,0 +1,9 @@
+{
+  "name": "barney",
+  "version": "1.0.0",
+  "description": "An idea",
+  "main": "index.js",
+  "repository": "https://github.com/marlonsouza/barney.git",
+  "author": "@marlonsouza",
+  "license": "MIT"
+}
