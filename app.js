@@ -1,33 +1,25 @@
 import 'dotenv/config';
 
-import readline from 'readline-sync';
+import Input from './robots/input';
+import TextBot from './robots/text';
 
 class App{
     constructor(){
         this.start();
     }
 
-    start(){
+    async start(){
         const content = {};
 
-        content.searchTerm = this.asskAndReturnSearchTerm();
-        content.prefix = this.askAndReturnPrefix();
+        this.InputBot = new Input(content);
+        this.TextBot = new TextBot(content);
 
-        console.log(content);
+        this.InputBot.go();
+        await this.TextBot.go();
         
     }
 
-    asskAndReturnSearchTerm(){
-        return readline.question('Whats up Dude? What do you want? ');
-    }
-
-    askAndReturnPrefix(){
-        const prefixes = ['Who is', 'Whats is', 'The history of'];
-
-        const selectedPrefixes = readline.keyInSelect(prefixes, 'Choose your destiny:');
-
-        return prefixes[selectedPrefixes];
-    }
+    
 }
 
 export default new App();
