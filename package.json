@@ -13,8 +13,10 @@
     "start:debug": "babel-node app.js --debug"
   },
   "dependencies": {
+    "algorithmia": "^0.3.10",
     "dotenv": "^8.2.0",
-    "readline-sync": "^1.4.10"
+    "readline-sync": "^1.4.10",
+    "sbd": "^1.0.18"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
