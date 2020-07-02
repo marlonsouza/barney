@@ -9,7 +9,9 @@ class App{
     }
 
     async start(){
-        const content = {};
+        const content = {
+            maximumSentences: 7
+        };
 
         this.InputBot = new Input(content);
         this.TextBot = new TextBot(content);
@@ -17,6 +19,8 @@ class App{
         this.InputBot.go();
         await this.TextBot.go();
         
+        console.log(content);
+
     }
 
     
