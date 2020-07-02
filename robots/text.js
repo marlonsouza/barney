@@ -3,15 +3,63 @@ import algorithmia from 'algorithmia';
 import algorithmiaConfig from '../config/algorithmia';
 import sbd from 'sbd';
 
+import NaturalLanguageUnderstandingV1 from 'ibm-watson/natural-language-understanding/v1';
+import { IamAuthenticator } from 'ibm-watson/auth';
+
 class Text{
     constructor(content){
         this.content = content;
+
+        this.nlu = new NaturalLanguageUnderstandingV1({
+            version: process.env.NATURAL_LANGUAGE_VERSION,
+            authenticator: new IamAuthenticator({
+                apikey: process.env.NATURAL_LANGUAGE_UNDERSTANDING_IAM_APIKEY
+            }),
+            url: process.env.NATURAL_LANGUAGE_URL
+        });
     }
 
     async go(){
        await this.fetchContentFromWikipedia();
        this.sanitizeContent();
        this.breakContentIntoSentences(); 
+       this.limitMaximumSenteces();
+       await this.fetchKeywordsAllSentences();
+    }
+
+    async fetchKeywordsAllSentences(){
+        for(const sentence of this.content.sentences){
+            sentence.keywords = await this.fetchWatsonAndExtractTasks(sentence.text);
+        }
+    }
+
+    limitMaximumSenteces(){
+        const {sentences, maximumSentences} = this.content;
+        
+        this.content.sentences = sentences.slice(0, maximumSentences);
+    }
+
+    async fetchWatsonAndExtractTasks(sentence){
+        return new Promise((resolve, reject) => {
+            this.nlu.analyze({
+                text: sentence,
+                features:{
+                    keywords:{}
+                }},
+                (error, {result}) =>{
+                    if(error){
+                        reject(error);
+                    }
+    
+                    const keywords = result.keywords.map(k => {
+                        console.log(k);
+                        return k.text;
+                    });
+
+                    resolve(keywords);
+                }
+            );
+        });
     }
 
     async fetchContentFromWikipedia(){
@@ -41,8 +89,6 @@ class Text{
             keywords: [],
             images:[]
         }));
-
-        console.log(this.content);
     }
 
     removeBlankLinesAndMarkDown(text){
