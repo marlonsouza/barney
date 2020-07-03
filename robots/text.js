@@ -106,4 +106,4 @@ class Text{
     }
 }
 
-export default Text;
+export default new Text();

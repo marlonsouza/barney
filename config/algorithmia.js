@@ -1,4 +1,4 @@
 module.exports = {
-  API_KEY: process.env.API_KEY,
-  ALGO: process.env.ALGO,
+  API_KEY: process.env.ALGORITHMIA_API_KEY,
+  ALGO: process.env.ALGORITHMIA_ALGO,
 };

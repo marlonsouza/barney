@@ -1,21 +1,23 @@
 import 'dotenv/config';
 
-import Input from './robots/input';
+import InputBot from './robots/input';
 import TextBot from './robots/text';
+import ImageBot from './robots/image';
+import StateBot from './robots/state';
 
 class App{
     constructor(){
-        this.start();
+        this.go();
     }
 
-    async start(){
-        this.InputBot = new Input();
-        this.TextBot = new TextBot();
+    async go(){
 
-        this.InputBot.go();
-        await this.TextBot.go();
-        
-        console.log(content);
+        InputBot.go();
+        await TextBot.go();
+        await ImageBot.go();
+    
+        const content = StateBot.load();
+        console.dir(content, {showHidden: false, depth: null});
 
     }
 
