@@ -6,10 +6,10 @@ import sbd from 'sbd';
 import NaturalLanguageUnderstandingV1 from 'ibm-watson/natural-language-understanding/v1';
 import { IamAuthenticator } from 'ibm-watson/auth';
 
-class Text{
-    constructor(content){
-        this.content = content;
+import StateBot from './state';
 
+class Text{
+    constructor(){
         this.nlu = new NaturalLanguageUnderstandingV1({
             version: process.env.NATURAL_LANGUAGE_VERSION,
             authenticator: new IamAuthenticator({
@@ -20,11 +20,15 @@ class Text{
     }
 
     async go(){
+       this.content = StateBot.load();
+
        await this.fetchContentFromWikipedia();
        this.sanitizeContent();
        this.breakContentIntoSentences(); 
        this.limitMaximumSenteces();
        await this.fetchKeywordsAllSentences();
+
+       StateBot.save(this.content);
     }
 
     async fetchKeywordsAllSentences(){
@@ -51,10 +55,7 @@ class Text{
                         reject(error);
                     }
     
-                    const keywords = result.keywords.map(k => {
-                        console.log(k);
-                        return k.text;
-                    });
+                    const keywords = result.keywords.map(k =>  k.text);
 
                     resolve(keywords);
                 }
