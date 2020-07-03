@@ -3,9 +3,6 @@ import readline from 'readline-sync';
 import StateBot from './state';
 
 class Input{
-    constructor(content){
-        this.content = content;
-    }
 
     go(){
         this.content = {
@@ -14,6 +11,9 @@ class Input{
 
         this.content.searchTerm = this.asskAndReturnSearchTerm();
         this.content.prefix = this.askAndReturnPrefix();
+
+
+
         StateBot.save(this.content);
     }
 
@@ -30,4 +30,4 @@ class Input{
     }
 }
 
-export default Input;
+export default new Input();
