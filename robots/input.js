@@ -1,13 +1,20 @@
 import readline from 'readline-sync';
 
+import StateBot from './state';
+
 class Input{
     constructor(content){
         this.content = content;
     }
 
     go(){
+        this.content = {
+            maximumSentences: 7
+        };
+
         this.content.searchTerm = this.asskAndReturnSearchTerm();
         this.content.prefix = this.askAndReturnPrefix();
+        StateBot.save(this.content);
     }
 
     asskAndReturnSearchTerm(){
