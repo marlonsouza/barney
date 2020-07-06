@@ -10,7 +10,7 @@ class Image {
   async go() {
     this.content = State.load();
     
-    //await this.fetchImagesOfAllSentences();
+    await this.fetchImagesOfAllSentences();
     await this.downloadAllImages();
 
     State.save(this.content);
