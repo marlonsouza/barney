@@ -12,12 +12,12 @@ class App{
 
     async go(){
 
-        InputBot.go();
-        await TextBot.go();
+        //InputBot.go();
+        //await TextBot.go();
         await ImageBot.go();
     
         const content = StateBot.load();
-        console.dir(content, {showHidden: false, depth: null});
+        //console.dir(content, {showHidden: false, depth: null});
 
     }
 

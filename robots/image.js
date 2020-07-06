@@ -1,6 +1,7 @@
 import State from "./state";
 
 import { google } from "googleapis";
+import imageDownloader from 'image-downloader';
 
 const customSearch = google.customsearch('v1');
 
@@ -9,9 +10,38 @@ class Image {
   async go() {
     this.content = State.load();
     
-    await this.fetchImagesOfAllSentences();
+    //await this.fetchImagesOfAllSentences();
+    await this.downloadAllImages();
 
     State.save(this.content);
+  }
+
+  async downloadAllImages(){
+    this.content.downloadedImages = [];
+
+    for(const [iSentece, sentence] of this.content.sentences.entries()){
+        for(const [iImage, image] of sentence.images.entries()){
+            try{
+                if(this.content.downloadedImages.includes(image)){
+                    throw new Error(`Image já baixada`);
+                }
+
+                await this.downloadImge(image, `${iSentece}${iImage}-original.png`);
+                this.content.downloadedImages.push(image);
+                console.log(`[${iSentece}][${iImage}] Baixou imagem com sucesso ${image}`);
+                break;
+            }catch(error){
+                console.log(`[${iSentece}][${iImage}] Erro ao baixar imagem ${Image}: ${error}`);
+            }
+        }
+    }
+  }
+
+  async downloadImge(url, fileName){
+    return imageDownloader.image({
+        url,
+        dest: `./data/${fileName}`
+    });
   }
 
   async fetchImagesOfAllSentences(){
